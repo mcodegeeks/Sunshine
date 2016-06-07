@@ -100,6 +100,11 @@ public class ForecastFragment extends Fragment {
         @Override
         protected Void doInBackground(String... params) {
 
+            // If there's no zip code, there's nothing to look up.  Verify size of params.
+            if (params.length == 0) {
+                return null;
+            }
+
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
