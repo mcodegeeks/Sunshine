@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mcodegeeks.sunshine.data;
 
 import android.content.ComponentName;
@@ -69,25 +84,11 @@ public class TestProvider extends AndroidTestCase {
     }
 
     /*
-       This helper function deletes all records from both database tables using the database
-       functions only.  This is designed to be used to reset the state of the database until the
-       delete functionality is available in the ContentProvider.
-     */
-    public void deleteAllRecordsFromDB() {
-        WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        db.delete(WeatherEntry.TABLE_NAME, null, null);
-        db.delete(LocationEntry.TABLE_NAME, null, null);
-        db.close();
-    }
-
-    /*
         Student: Refactor this function to use the deleteAllRecordsFromProvider functionality once
         you have implemented delete functionality there.
      */
     public void deleteAllRecords() {
-        deleteAllRecordsFromDB();
+        deleteAllRecordsFromProvider();
     }
 
     // Since we want each test to start with a clean slate, run deleteAllRecords

@@ -1,3 +1,18 @@
+/*
+ * Copyright (C) 2014 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.mcodegeeks.sunshine.data;
 
 import android.content.ContentValues;
@@ -48,6 +63,7 @@ public class TestDb extends AndroidTestCase {
 
         // have we created the tables we want?
         Cursor c = db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
         assertTrue("Error: This means that the database has not been created correctly",
                 c.moveToFirst());
 
@@ -113,6 +129,7 @@ public class TestDb extends AndroidTestCase {
         // we can move this code to insertLocation and then call insertLocation from both
         // tests. Why move it? We need the code to return the ID of the inserted location
         // and our testLocationTable can only return void because it's a test.
+
         long locationRowId = insertLocation();
 
         // Make sure we have a valid row ID.
@@ -124,8 +141,7 @@ public class TestDb extends AndroidTestCase {
         WeatherDbHelper dbHelper = new WeatherDbHelper(mContext);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
-        // Second Step (Weather): Create ContentValues of what you want to insert
-        // (you can use the createWeatherValues TestUtilities function if you wish)
+        // Second Step (Weather): Create weather values
         ContentValues weatherValues = TestUtilities.createWeatherValues(locationRowId);
 
         // Third Step (Weather): Insert ContentValues into database and get a row ID back
@@ -135,7 +151,7 @@ public class TestDb extends AndroidTestCase {
         // Fourth Step: Query the database and receive a Cursor back
         // A cursor is your primary interface to the query results.
         Cursor weatherCursor = db.query(
-                WeatherContract.WeatherEntry.TABLE_NAME, // Table to Query
+                WeatherContract.WeatherEntry.TABLE_NAME,  // Table to Query
                 null, // leaving "columns" null just returns all the columns.
                 null, // cols for "where" clause
                 null, // values for "where" clause
@@ -144,12 +160,10 @@ public class TestDb extends AndroidTestCase {
                 null  // sort order
         );
 
-        // Move the cursor to a valid database row and check to see if we have any rows
+        // Move the cursor to the first valid database row and check to see if we have any rows
         assertTrue( "Error: No Records returned from location query", weatherCursor.moveToFirst() );
 
-        // Fifth Step: Validate data in resulting Cursor with the original ContentValues
-        // (you can use the validateCurrentRecord function in TestUtilities to validate the
-        // query if you like)
+        // Fifth Step: Validate the location Query
         TestUtilities.validateCurrentRecord("testInsertReadDb weatherEntry failed to validate",
                 weatherCursor, weatherValues);
 
@@ -157,7 +171,7 @@ public class TestDb extends AndroidTestCase {
         assertFalse( "Error: More than one record returned from weather query",
                 weatherCursor.moveToNext() );
 
-        // Sixth Step: Finally, close the cursor and database
+        // Sixth Step: Close cursor and database
         weatherCursor.close();
         dbHelper.close();
     }
@@ -192,7 +206,7 @@ public class TestDb extends AndroidTestCase {
         // Fourth Step: Query the database and receive a Cursor back
         // A cursor is your primary interface to the query results.
         Cursor cursor = db.query(
-                WeatherContract.LocationEntry.TABLE_NAME, // Table to Query
+                WeatherContract.LocationEntry.TABLE_NAME,  // Table to Query
                 null, // all columns
                 null, // Columns for the "where" clause
                 null, // Values for the "where" clause
@@ -215,7 +229,7 @@ public class TestDb extends AndroidTestCase {
         assertFalse( "Error: More than one record returned from location query",
                 cursor.moveToNext() );
 
-        // Sixth Step: Finally, close the cursor and database
+        // Sixth Step: Close Cursor and Database
         cursor.close();
         db.close();
         return locationRowId;
